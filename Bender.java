@@ -1,11 +1,19 @@
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class Bender {
 
     LinkedList<Casilla> casillas = new LinkedList<>();
     LinkedList<Casilla> teleport = new LinkedList<>();
     LinkedList<Casilla> iterator = new LinkedList<>();
+
+    LinkedList<Character> prioridad1 = new LinkedList<>();
+    LinkedList<Character> prioridad2= new LinkedList<>();
+    LinkedList<Character> prioridadActual= prioridad1;
+
 
     char[] pri1 = new char[]{'S', 'E', 'N', 'W'};
     char[] pri2 = new char[]{'N', 'W', 'S', 'E'};
@@ -17,6 +25,15 @@ public class Bender {
 
     // Constructor: ens passen el mapa en forma d'String
     public Bender(String mapa) {
+
+        prioridad1.add('S');
+        prioridad1.add('E');
+        prioridad1.add('N');
+        prioridad1.add('W');
+        prioridad2.add('N');
+        prioridad2.add('W');
+        prioridad2.add('S');
+        prioridad2.add('E');
 
         int x = 0;
         int y = 0;
@@ -51,15 +68,14 @@ public class Bender {
         int posPrio;
         System.out.println("Position robot : x:" + this.robot.x + " y:" + this.robot.y);
 
-        while (true) {
-            notMove = 0;
 
-            posPrio = 0;
+        while(true) {
+        notMove = 0;
+
+        posPrio = 0;
 
             for (; posPrio < currentPri.length; ) {
 
-                System.out.println("Veces sin mover " + notMove);
-                System.out.println(currentPri[posPrio]);
 
                 switch (currentPri[posPrio]) {
                     case 'N':
@@ -81,7 +97,11 @@ public class Bender {
                             if (isIterator()) {
                                 System.out.println("Encima de un Iterator");
                                 iterator();
-                                posPrio = 0;
+                                if (currentPri == pri1){
+                                    posPrio = 2;
+                                }else {
+                                    posPrio = 0;
+                                }
                             }
                         }
                         break;
@@ -97,6 +117,8 @@ public class Bender {
                                 if (notMove == 2) {
                                     posPrio++;
                                     notMove++;
+                                }else {
+                                    posPrio = 0;
                                 }
 
                             }
@@ -105,7 +127,11 @@ public class Bender {
                             if (isIterator()) {
                                 System.out.println("Encima de un Iterator");
                                 iterator();
-                                posPrio = 0;
+                                if (currentPri == pri1){
+                                    posPrio = 0;
+                                }else {
+                                    posPrio = 2;
+                                }
                             }
                             notMove = 0;
                         }
@@ -131,7 +157,11 @@ public class Bender {
                                 System.out.println("Encima de un Iterator");
                                 iterator();
                                 notMove = 0;
-                                posPrio = 0;
+                                if (currentPri == pri1){
+                                    posPrio = 1;
+                                }else {
+                                    posPrio = 3;
+                                }
                             }
                         }
                         break;
@@ -153,8 +183,11 @@ public class Bender {
                             if (isIterator()) {
                                 System.out.println("Encima de un Iterator");
                                 iterator();
-                                notMove = 0;
-                                posPrio = 0;
+                                if (currentPri == pri1){
+                                    posPrio = 3;
+                                }else {
+                                    posPrio = 1;
+                                }
                             }
                         }
                         break;
@@ -165,16 +198,18 @@ public class Bender {
                     teleport();
                 }
 
-
                 dibuixaMapa(casillas);
 
                 if (robot.x == meta.x && robot.y == meta.y) return resultado;
-
+                if (resultado.length()>100)return null;
             }
 
-            return "Imposible";
-        }
+
+
+        return "Imposible";
     }
+
+}
 
     void dibuixaMapa(LinkedList<Casilla> c) {
 
