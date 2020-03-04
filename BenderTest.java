@@ -286,6 +286,7 @@ public class BenderTest {
     }
 
     @Test
+
     public void test18() {
         String mapa = "" +
                 "###########\n" +
