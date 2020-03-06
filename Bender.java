@@ -85,7 +85,7 @@ class Bender {
                 case 'N':
 
 
-                    if (!move('N')) {
+                    if (!canMove('N')) {
                         if (currentPri == pri1) {
                             if (notMove == 2) {
                                 posPrio++;
@@ -97,7 +97,9 @@ class Bender {
 
                         }
                     } else {
-                        // Una vegada ens hem mogut, hem de comprovar si som a un iterator, per a canviar de prioritat
+                        // Si ens movem, haurem de situar el robot a la següent casella a la llista i a la casella actual
+                        // posam una nova casella buida, també cambiam les variables X o Y depenent d'on ens moguem
+                        // Afegim el moviment al resultat
                         notMove = 0;
                         int index = robot.index;
                         casillas.set(index, new Casilla(index, robot.x, robot.y, ' '));
@@ -107,6 +109,7 @@ class Bender {
                         robot.index = index;
                         this.result += 'N';
 
+                        //Comprovam si la casella actual forma part de la llista d'iterators o de teletransportadors
                         if (isIterator()) {
 
                             iterator();
@@ -124,7 +127,7 @@ class Bender {
                     break;
                 case 'S':
 
-                    if (!move('S')) {
+                    if (!canMove('S')) {
                         if (currentPri == pri1) {
                             if (notMove == 0) {
                                 posPrio++;
@@ -169,7 +172,7 @@ class Bender {
                     break;
                 case 'E':
 
-                    if (!move('E')) {
+                    if (!canMove('E')) {
                         if (currentPri == pri1) {
                             if (notMove == 1) {
                                 posPrio++;
@@ -188,7 +191,7 @@ class Bender {
                         int index = robot.index;
 
                         casillas.set(index, new Casilla(index, robot.x, robot.y, ' '));
-                        index = Objects.requireNonNull(getCasilla(robot.x + 1, robot.y)).index;
+                        index++;
                         casillas.set(index, robot);
                         robot.x++;
                         robot.index = index;
@@ -212,7 +215,7 @@ class Bender {
                     break;
                 case 'W':
 
-                    if (!move('W')) {
+                    if (!canMove('W')) {
                         if (currentPri != pri1) {
                             if (notMove == 1) {
                                 posPrio++;
@@ -229,7 +232,7 @@ class Bender {
                         int index = robot.index;
 
                         casillas.set(index, new Casilla(index, robot.x, robot.y, ' '));
-                        index = Objects.requireNonNull(getCasilla(robot.x - 1, robot.y)).index;
+                        index--;
                         casillas.set(index, robot);
                         robot.x--;
                         robot.index = index;
@@ -271,7 +274,7 @@ class Bender {
     }
 
     // Funció que realitza el moviment del robot, retorna un boolean
-    private boolean move(char orientation) {
+    private boolean canMove(char orientation) {
         // Guardam la posició del robot a la llista de caselles
         int index = robot.index;
 
@@ -280,24 +283,13 @@ class Bender {
 
             case 'N':
                 //Si a la posició a la que ens volem moure ens trobam una casella amb caràcter '#', retornarem un
-                // false, ja que hem trobat una paret
+                // false, ja que hem trobat una paret, si no, retornarem true
                 if (getCasilla(robot.x, robot.y - 1).car == '#') {
                     return false;
                 } else {
-                    // Si ens hem pogut moure, canviarem la posició de la casella actual a la nova, editant
-                    // la llista de caràcters que tenim amb els valors, i afegirem el caràcter del moviment al resultat
-
 
                     return true;
-                    /*
-                    casillas.set(index, new Casilla(index, robot.x, robot.y, ' '));
-                    index = getCasilla(robot.x, robot.y - 1).index;
-                    casillas.set(index, robot);
-                    robot.y--;
-                    robot.index = index;
-                    this.result += 'N';
-                    return true;
-                     */
+
                 }
             case 'E':
                 if (getCasilla(robot.x + 1, robot.y).car == '#') {
@@ -306,15 +298,7 @@ class Bender {
                 } else {
 
                     return true;
-                    /*
-                    casillas.set(index, new Casilla(index, robot.x, robot.y, ' '));
-                    index = getCasilla(robot.x + 1, robot.y).index;
-                    casillas.set(index, robot);
-                    robot.x++;
-                    robot.index = index;
-                    this.result += 'E';
-                    return true;
-                     */
+
                 }
             case 'S':
                 if (getCasilla(robot.x, robot.y + 1).car == '#') {
@@ -323,15 +307,7 @@ class Bender {
                 } else {
 
                     return true;
-                    /*
-                    casillas.set(index, new Casilla(index, robot.x, robot.y, ' '));
-                    index = getCasilla(robot.x, robot.y + 1).index;
-                    casillas.set(index, robot);
-                    robot.y++;
-                    robot.index = index;
-                    this.result += 'S';
-                    return true;
-                     */
+
                 }
 
             case 'W':
@@ -340,15 +316,7 @@ class Bender {
                 } else {
 
                     return true;
-                    /*
-                    casillas.set(index, new Casilla(index, robot.x, robot.y, ' '));
-                    index = getCasilla(robot.x - 1, robot.y).index;
-                    casillas.set(index, robot);
-                    robot.x--;
-                    robot.index = index;
-                    this.result += 'W';
-                    return true;
-                     */
+
                 }
         }
         return false;
