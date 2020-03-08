@@ -47,9 +47,7 @@ class Bender {
 
             casillas.add(c);
         }
-        System.out.println("Map created Succesfull");
 
-        //   dibuixaMapa(casillas);
 
     }
 
@@ -275,9 +273,6 @@ class Bender {
 
     // Funció que realitza el moviment del robot, retorna un boolean
     private boolean canMove(char orientation) {
-        // Guardam la posició del robot a la llista de caselles
-        int index = robot.index;
-
 
         switch (orientation) {
 
